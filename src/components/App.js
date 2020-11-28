@@ -3,6 +3,7 @@ import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Users from '../pages/Users';
+import AddUser from '../pages/AddUser';
 
 const theme = createMuiTheme({
   palette: {
@@ -23,6 +24,7 @@ const App = () => {
       <Router>
         <Switch>
           <Route exact path="/" component={Users} />
+          <Route exact path="/add-user" component={AddUser} />
         </Switch>
       </Router>
     </ThemeProvider>

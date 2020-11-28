@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 
 export default function useIntersectionObserver({
   root,
@@ -7,7 +7,7 @@ export default function useIntersectionObserver({
   threshold = 1.0,
   rootMargin = '0px',
 }) {
-  React.useEffect(() => {
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) =>
         entries.forEach((entry) => entry.isIntersecting && onIntersect()),

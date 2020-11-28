@@ -15,10 +15,8 @@ import useIntersectionObserver from '../hooks/useIntersectionObserver';
 const InfiniteScroll = ({ entity, query }) => {
   const { entityName, fetchFunction, headers, order } = entity;
   const {
-    status,
     data,
-    error,
-    isFetching,
+    status,
     isFetchingMore,
     fetchMore,
     canFetchMore,
@@ -34,13 +32,14 @@ const InfiniteScroll = ({ entity, query }) => {
     },
   });
   const loadMoreRef = React.useRef();
-  const loadMoreMessage = isFetchingMore
-    ? 'Loading more...'
-    : canFetchMore
-    ? 'Load More'
-    : data && !data[0].data.length
-    ? 'No records found'
-    : 'Nothing more to load';
+  const loadMoreMessage =
+    status === 'loading'
+      ? 'Loading...'
+      : isFetchingMore || canFetchMore
+      ? 'Loading more...'
+      : data && !data[0].data.length
+      ? 'No records found'
+      : 'Nothing more to load';
 
   useIntersectionObserver({
     target: loadMoreRef,

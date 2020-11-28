@@ -12,6 +12,9 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import { Link } from 'react-router-dom';
 import { QueryCache, ReactQueryCacheProvider } from 'react-query';
 
 import { getUsers } from '../api';
@@ -97,15 +100,29 @@ const Users = () => {
               variant="contained"
               color="primary"
               onClick={handleExpandClick}
+              style={{ marginRight: 5, minWidth: 125 }}
+              startIcon={<FilterListIcon />}
             >
               FILTER
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              component={Link}
+              to="/add-user"
+              style={{ minWidth: 125 }}
+              startIcon={<AddIcon />}
+            >
+              ADD USER
             </Button>
           </Grid>
         </Grid>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Card variant="outlined">
             <CardContent>
-              <Typography gutterBottom>Filters</Typography>
+              <Typography gutterBottom>
+                <Box fontWeight="fontWeightMedium">Filters</Box>
+              </Typography>
               <Grid container spacing={1}>
                 <Grid item xs={1}>
                   <TextField

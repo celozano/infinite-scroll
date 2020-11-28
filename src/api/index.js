@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { baseUrl } from '../config';
+import { baseUrl, accessToken } from '../config';
 import { isQueryEmpty, cleanQuery } from '../utils';
 
 export const getUsers = async (key, query, nextPage = 0) => {
@@ -10,6 +10,14 @@ export const getUsers = async (key, query, nextPage = 0) => {
       page: nextPage,
       ...query,
     },
+  });
+
+  return data;
+};
+
+export const createUser = async (user) => {
+  const { data } = await axios.post(`${baseUrl}/users`, user, {
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
 
   return data;
