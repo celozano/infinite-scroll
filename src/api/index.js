@@ -1,11 +1,14 @@
 import axios from 'axios';
 
 import { baseUrl } from '../config';
+import { isQueryEmpty, cleanQuery } from '../utils';
 
-export const getUsers = async (key, nextPage = 0) => {
+export const getUsers = async (key, query, nextPage = 0) => {
+  query = !isQueryEmpty(query) && cleanQuery(query);
   const { data } = await axios.get(`${baseUrl}/users`, {
     params: {
       page: nextPage,
+      ...query,
     },
   });
 

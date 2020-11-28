@@ -1,8 +1,5 @@
 import React from 'react';
 import {
-  Box,
-  Container,
-  Paper,
   Table,
   TableBody,
   TableContainer,
@@ -15,8 +12,7 @@ import TableHeaders from './TableHeaders';
 import TableRows from './TableRows';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 
-const InfiniteScroll = ({ entity }) => {
-  console.log('entity', entity);
+const InfiniteScroll = ({ entity, query }) => {
   const { entityName, fetchFunction, headers, order } = entity;
   const {
     status,
@@ -26,7 +22,7 @@ const InfiniteScroll = ({ entity }) => {
     isFetchingMore,
     fetchMore,
     canFetchMore,
-  } = useInfiniteQuery(entityName, fetchFunction, {
+  } = useInfiniteQuery([entityName, query], fetchFunction, {
     refetchOnWindowFocus: false,
     getFetchMore: (lastGroup) => {
       const {
@@ -42,6 +38,8 @@ const InfiniteScroll = ({ entity }) => {
     ? 'Loading more...'
     : canFetchMore
     ? 'Load More'
+    : data && !data[0].data.length
+    ? 'No records found'
     : 'Nothing more to load';
 
   useIntersectionObserver({
@@ -50,25 +48,19 @@ const InfiniteScroll = ({ entity }) => {
   });
 
   return (
-    <Box mt={20}>
-      <Container>
-        <Paper>
-          <TableContainer style={{ maxHeight: 600 }}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableHeaders headers={headers} order={order} />
-              </TableHead>
-              <TableBody>
-                <TableRows data={data} order={order} />
-              </TableBody>
-            </Table>
-            <Typography ref={loadMoreRef} align="center" color="textSecondary">
-              {loadMoreMessage}
-            </Typography>
-          </TableContainer>
-        </Paper>
-      </Container>
-    </Box>
+    <TableContainer style={{ maxHeight: 600 }}>
+      <Table stickyHeader>
+        <TableHead>
+          <TableHeaders headers={headers} order={order} />
+        </TableHead>
+        <TableBody>
+          <TableRows data={data} order={order} />
+        </TableBody>
+      </Table>
+      <Typography ref={loadMoreRef} align="center" color="textSecondary">
+        {loadMoreMessage}
+      </Typography>
+    </TableContainer>
   );
 };
 
