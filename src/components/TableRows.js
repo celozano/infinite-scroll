@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { TableCell, TableRow } from '@material-ui/core';
 
 import { formatValue } from '../utils';
+import Actions from './Actions';
 
 const TableRows = ({ data, order }) => {
   const [rows, setRows] = useState([]);
@@ -15,7 +16,8 @@ const TableRows = ({ data, order }) => {
 
   return rows.map((row) => {
     const columns = order.map((key) => {
-      const value = formatValue(key, row[key]);
+      const value =
+        key === 'actions' ? <Actions row={row} /> : formatValue(key, row[key]);
       return <TableCell key={key}>{value}</TableCell>;
     });
 

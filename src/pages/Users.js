@@ -31,6 +31,7 @@ const entity = {
     status: 'STATUS',
     created_at: 'CREATED',
     updated_at: 'UPDATED',
+    actions: 'ACTIONS',
   },
   order: [
     'id',
@@ -40,6 +41,7 @@ const entity = {
     'status',
     'created_at',
     'updated_at',
+    'actions',
   ],
 };
 
