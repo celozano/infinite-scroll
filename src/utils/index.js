@@ -15,9 +15,23 @@ export const isQueryEmpty = (obj) => {
 };
 
 export const cleanQuery = (obj) => {
-  Object.keys(obj).forEach(
-    (k) => !obj[k] && obj[k] !== undefined && delete obj[k]
+  const copy = Object.assign({}, obj);
+
+  Object.keys(copy).forEach(
+    (k) => !copy[k] && copy[k] !== undefined && delete copy[k]
   );
 
-  return obj;
+  return copy;
+};
+
+export const parseError = ({ data }) => {
+  const errors = data.map((error) => {
+    return (
+      <li key={error.field}>
+        {error.field} {error.message}
+      </li>
+    );
+  });
+
+  return errors.length ? <ul>{errors}</ul> : null;
 };
