@@ -15,16 +15,14 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { Link } from 'react-router-dom';
-import { QueryCache, ReactQueryCacheProvider } from 'react-query';
 
-import { getUsers } from '../api';
+import useUsers from '../hooks/useUsers';
 import InfiniteScroll from '../components/InfiniteScroll';
-
-const queryCache = new QueryCache();
+import { isQueryEmpty, cleanQuery } from '../utils';
 
 const entity = {
   entityName: 'users',
-  fetchFunction: getUsers,
+  useHook: useUsers,
   headers: {
     id: 'ID',
     name: 'NAME',
@@ -47,7 +45,7 @@ const entity = {
 
 const Users = () => {
   const [expanded, setExpanded] = useState(false);
-  const [query, setQuery] = useState(false);
+  const [query, setQuery] = useState({});
   const [state, setState] = useState({
     id: '',
     name: '',
@@ -85,7 +83,9 @@ const Users = () => {
   };
 
   const handleApplpyClick = () => {
-    setQuery(state);
+    if (isQueryEmpty(state)) return;
+    var query = cleanQuery(state);
+    setQuery(query);
   };
 
   return (
@@ -120,9 +120,7 @@ const Users = () => {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Card variant="outlined">
             <CardContent>
-              <Typography gutterBottom>
-                <Box fontWeight="fontWeightMedium">Filters</Box>
-              </Typography>
+              <Typography gutterBottom>Filters</Typography>
               <Grid container spacing={1}>
                 <Grid item xs={1}>
                   <TextField
@@ -218,13 +216,11 @@ const Users = () => {
             </CardContent>
           </Card>
         </Collapse>
-        <ReactQueryCacheProvider queryCache={queryCache}>
-          <Box mt={2}>
-            <Paper variant="outlined">
-              <InfiniteScroll entity={entity} query={query} />
-            </Paper>
-          </Box>
-        </ReactQueryCacheProvider>
+        <Box mt={2}>
+          <Paper variant="outlined">
+            <InfiniteScroll entity={entity} query={query} />
+          </Paper>
+        </Box>
       </Box>
     </Container>
   );

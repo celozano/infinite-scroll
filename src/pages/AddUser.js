@@ -10,18 +10,18 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { useMutation } from 'react-query';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import { createUser } from '../api';
+import { parseError } from '../utils';
+import useCreateUser from '../hooks/useCreateUser';
 
 const validationSchema = yup.object({
   name: yup
     .string('Enter you name')
     .required('Full Name is required')
     .max(20)
-    .test('alphabets', 'Name cannot contain numbers', (value) => {
+    .test('alphabets', 'Full Name cannot contain numbers', (value) => {
       return /^[a-zA-Z\s]*$/.test(value);
     }),
   email: yup
@@ -33,7 +33,7 @@ const validationSchema = yup.object({
 
 const AddUser = () => {
   const [error, setError] = useState(false);
-  const [mutate] = useMutation(createUser);
+  const [mutate] = useCreateUser();
   const history = useHistory();
   const formik = useFormik({
     initialValues: {
@@ -45,9 +45,11 @@ const AddUser = () => {
     onSubmit: async ({ name, email, gender, status = 'Active' }) => {
       setError(false);
       try {
-        const { code } = await mutate({ name, email, gender, status });
-        if (code !== 201) {
-          setError('An error occurred, please try again later.');
+        const data = await mutate({ name, email, gender, status });
+
+        if (data.code !== 201) {
+          const errorMessage = parseError(data);
+          setError(errorMessage);
           return;
         }
         history.push('/');
@@ -69,7 +71,11 @@ const AddUser = () => {
           <Grid item>
             <Typography variant="h4">Create User</Typography>
           </Grid>
-          {error && <Alert severity="error">{error}</Alert>}
+          {error && (
+            <Alert icon={false} severity="error">
+              {error}
+            </Alert>
+          )}
           <Grid item>
             <form onSubmit={formik.handleSubmit}>
               <TextField
