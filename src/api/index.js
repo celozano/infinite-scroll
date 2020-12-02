@@ -27,3 +27,11 @@ export const deleteUser = async (userId) => {
 
   return data;
 };
+
+export const saveUser = async (user) => {
+  const { data } = await axios.put(`${baseUrl}/users/${user.id}`, user, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  return data;
+};

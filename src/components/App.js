@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Users from '../pages/Users';
 import AddUser from '../pages/AddUser';
+import EditUser from '../pages/EditUser';
 
 const theme = createMuiTheme({
   palette: {
@@ -25,6 +26,7 @@ const App = () => {
         <Switch>
           <Route exact path="/" component={Users} />
           <Route exact path="/add-user" component={AddUser} />
+          <Route exact path="/edit-user" component={EditUser} />
         </Switch>
       </Router>
     </ThemeProvider>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Grid, IconButton } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -14,10 +15,6 @@ const Actions = ({ row }) => {
 
   const handleOpenClick = () => {
     setOpen(!isOpen);
-  };
-
-  const handleEditClick = () => {
-    // TODO
   };
 
   const handleCancelClick = () => {
@@ -51,7 +48,12 @@ const Actions = ({ row }) => {
         handleDeleteClick={handleDeleteClick}
       />
       <Grid item>
-        <IconButton size="small" color="primary" onClick={handleEditClick}>
+        <IconButton
+          size="small"
+          color="primary"
+          component={Link}
+          to={{ pathname: '/edit-user', state: { user: { ...row } } }}
+        >
           <EditIcon />
         </IconButton>
       </Grid>
