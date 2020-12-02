@@ -21,7 +21,6 @@ import InfiniteScroll from '../components/InfiniteScroll';
 import { isQueryEmpty, cleanQuery } from '../utils';
 
 const entity = {
-  entityName: 'users',
   useHook: useUsers,
   headers: {
     id: 'ID',
@@ -218,7 +217,7 @@ const Users = () => {
             </CardContent>
           </Card>
         </Collapse>
-        <Box mt={2}>
+        <Box mt={1}>
           <Paper variant="outlined">
             <InfiniteScroll entity={entity} query={query} />
           </Paper>

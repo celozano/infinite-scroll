@@ -1,4 +1,4 @@
-import { useInfiniteQuery, queryCache } from 'react-query';
+import { useInfiniteQuery } from 'react-query';
 import { getUsers } from '../api';
 
 export default function useUsers(query) {
@@ -11,9 +11,6 @@ export default function useUsers(query) {
       const nextPage = page + 1;
 
       return nextPage <= pages ? nextPage : false;
-    },
-    onSuccess: () => {
-      console.log('users', queryCache.getQueryData(['users', query]));
     },
   });
 }

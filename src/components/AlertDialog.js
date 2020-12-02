@@ -37,13 +37,7 @@ const AlertDialog = ({
 
   return (
     <>
-      <Dialog
-        open={isOpen}
-        onClose={handleCancelClick}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        fullWidth
-      >
+      <Dialog open={isOpen} onClose={handleCancelClick} fullWidth>
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
