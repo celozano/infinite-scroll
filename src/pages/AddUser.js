@@ -1,135 +1,83 @@
 import { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  MenuItem,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { Box, Container, Grid, Snackbar, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
 
-import { parseError } from '../utils';
+import UserForm from '../components/UserForm';
 import useCreateUser from '../hooks/useCreateUser';
-
-const validationSchema = yup.object({
-  name: yup
-    .string('Enter you name')
-    .required('Full Name is required')
-    .max(20)
-    .test('alphabets', 'Full Name cannot contain numbers', (value) => {
-      return /^[a-zA-Z\s]*$/.test(value);
-    }),
-  email: yup
-    .string('Enter you email')
-    .email('Enter a valid email')
-    .required('Email is required'),
-  gender: yup.string('Select your gender').required('Gender is required'),
-});
+import { parseError } from '../utils';
 
 const AddUser = () => {
-  const [error, setError] = useState(false);
-  const [mutate] = useCreateUser();
   const history = useHistory();
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      gender: '',
-    },
-    validationSchema: validationSchema,
-    onSubmit: async ({ name, email, gender, status = 'Active' }) => {
-      setError(false);
-      try {
-        const data = await mutate({ name, email, gender, status });
+  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isCreated, setIsCreated] = useState(false);
+  const [mutate] = useCreateUser();
+  const handleSubmit = async ({ name, email, gender, status }) => {
+    setError(false);
+    try {
+      setIsLoading(true);
+      const data = await mutate({ name, email, gender, status });
 
-        if (data.code !== 201) {
-          const errorMessage = parseError(data);
-          setError(errorMessage);
-          return;
-        }
-        history.push('/');
-      } catch {
-        setError('An error occurred, please try again later.');
+      if (data.code !== 201) {
+        const errorMessage = parseError(data);
+        setError(errorMessage);
+        return;
       }
-    },
-  });
+      setIsOpen(true);
+      setIsCreated(true);
+    } catch {
+      setError('An error occurred, please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    history.push('/');
+  };
 
   return (
-    <Container maxWidth="xs">
-      <Box mt={20}>
-        <Grid item>
-          <Typography color="primary" component={Link} to="/">
-            Back
-          </Typography>
-        </Grid>
-        <Box mt={10}>
+    <>
+      <Container maxWidth="xs">
+        <Box mt={20}>
           <Grid item>
-            <Typography variant="h4">Create User</Typography>
+            <Typography color="primary" component={Link} to="/">
+              Back
+            </Typography>
           </Grid>
-          {error && (
-            <Alert icon={false} severity="error">
-              {error}
-            </Alert>
-          )}
-          <Grid item>
-            <form onSubmit={formik.handleSubmit}>
-              <TextField
-                fullWidth
-                id="name"
-                label="Full Name"
-                margin="normal"
-                variant="outlined"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
+          <Box mt={10}>
+            <Grid item>
+              <Typography variant="h4">Create User</Typography>
+            </Grid>
+            {error && (
+              <Alert icon={false} severity="error">
+                {error}
+              </Alert>
+            )}
+            <Grid item>
+              <UserForm
+                handleSubmit={handleSubmit}
+                isLoading={isLoading}
+                isCreated={isCreated}
               />
-              <TextField
-                fullWidth
-                id="email"
-                label="Email"
-                margin="normal"
-                variant="outlined"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-              />
-              <TextField
-                select
-                name="gender"
-                label="Gender"
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                value={formik.values.gender}
-                onChange={formik.handleChange}
-                error={formik.touched.gender && Boolean(formik.errors.gender)}
-                helperText={formik.touched.gender && formik.errors.gender}
-              >
-                <MenuItem value="Male">Male</MenuItem>
-                <MenuItem value="Female">Female</MenuItem>
-              </TextField>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                fullWidth
-                disabled={formik.isSubmitting}
-              >
-                Create User
-              </Button>
-            </form>
-          </Grid>
+            </Grid>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={isOpen}
+        autoHideDuration={3000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success" variant="filled">
+          Created
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
