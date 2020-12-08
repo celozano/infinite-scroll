@@ -1,5 +1,3 @@
-# [Project requierements](https://eastridge.atlassian.net/wiki/spaces/EE/pages/291635201/Training+Project#Requirements)
-
 # [Demo](https://tutorial-project.netlify.app/)
 
 # Getting Started with Create React App
